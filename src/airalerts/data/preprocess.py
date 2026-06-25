@@ -37,6 +37,16 @@ def regions(df: pd.DataFrame) -> list[str]:
     return sorted(df["region"].unique().tolist())
 
 
+def filter_events(df: pd.DataFrame, region: str | None = None, start=None, end=None) -> pd.DataFrame:
+    """Відфільтрувати події за регіоном і діапазоном дат (end включно)."""
+    sub = _filter_region(df, region)
+    if start is not None:
+        sub = sub[sub["started_at"] >= pd.Timestamp(start, tz="UTC")]
+    if end is not None:
+        sub = sub[sub["started_at"] < pd.Timestamp(end, tz="UTC") + pd.Timedelta(days=1)]
+    return sub
+
+
 def daily_counts(df: pd.DataFrame, region: str | None = None) -> pd.Series:
     """Безперервний денний ряд кількості тривог (нулі для днів без подій)."""
     sub = _filter_region(df, region)

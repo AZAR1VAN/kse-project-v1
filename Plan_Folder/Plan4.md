@@ -1,7 +1,10 @@
-# Plan 4 — Multi-agent (R4)
+# Plan 4 — Авто-висновки (R4) *(переосмислено: без LLM)*
 
-1. `claude_cli.py`: `ask()` через `subprocess.run([...], capture_output=True, text=True, timeout=...)`; `json.loads(stdout)`; повернути `result`/`structured_output`; виключення `ClaudeUnavailable` (FileNotFoundError/TimeoutExpired/is_error). → *verify:* `ask("Reply OK")` повертає текст; неіснуючий бінар → fallback-виключення.
-2. `agents.py`: базовий клас `Agent` (name, level, `run(metrics) -> Finding`); підкласи з власним промптом. `Finding = {agent, claim, metrics, interpretation, source}`; `source ∈ {"claude","fallback"}`. → *verify:* кожен агент повертає Finding на тестових метриках.
-3. `judge.py`: `validate(finding) -> {confidence, issues}` з правилами: тренд (знак нахилу), аномалія (дата у списку), прогноз (yhat у межах ist. діапазону), патерни (кількість кластерів). `judge_all(findings) -> Report`. → *verify:* підкладене невірне твердження → confidence < 0.5 + issue.
-4. `orchestrator.py`: `analyze(...)`: побудувати ряд (R2) → метрики (R3) → агенти (R4) → суддя → `Report{findings, verified, generated_at, source}`. Стислі резюме у звіті. → *verify:* повертає несуперечливий звіт на реальному зрізі (Київська обл., 90 днів).
-5. `tests/test_agents.py`: fallback-режим (без CLI) детермінований і стабільний; суддя ловить невідповідність. → *verify:* `pytest tests/test_agents.py` зелений.
+1. Додати `data/preprocess.filter_events(df, region, start, end)` (регіон + діапазон дат, end включно).
+   → *verify:* фільтрує події коректно.
+2. `analysis/insights.py::report(...)`: фільтр → денний ряд → KPI (`descriptive`) → тренд (`decomposition`)
+   → аномалії (`anomaly`) → прогноз (`forecast`) → сезонність (профілі) → кластери (`patterns`, лише для
+   «Уся Україна»). Повернути `{kpi, conclusions, series, n_days}`. → *verify:* на Києві видає 5–6 висновків.
+3. Видалити пакет `src/airalerts/agents/` і `tests/test_agents.py` (LLM-шар). → *verify:* `grep -r claude src`
+   нічого не знаходить; тести зелені.
+4. Зафіксувати зміну обсягу в `log.md` і `Global_Roadmap.md`. → *verify:* записи наявні.

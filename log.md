@@ -42,3 +42,23 @@
 - `uv venv` (py3.12) + встановлення залежностей; перевірено імпорти core + prophet — OK.
 - git: коміт R1 `8bfd8ef` (поверх наявного Initial commit), origin = kse-project-v1; гілка `main`.
 - Виключив `allskills/` з трекінгу (вкладені git-репо) + у `.gitignore`; лишилось 31 файл проєкту. **R1 завершено.**
+
+### R2 — Data layer
+- `data/loader.py` (кеш Vadimkin CSV) + `data/preprocess.py` (нормалізація, безперервні денні ряди, профілі годин/днів, heatmap, `filter_events`). Тест `test_preprocess.py` (3) зелений. Реальні дані: 101 969 подій, 25 регіонів. Коміт `ea70a18`. **R2 завершено.**
+
+### R3 — Analysis core
+- `analysis/{descriptive,decomposition,anomaly,forecast,patterns}.py`: STL(period=7), MAD z-score+IsolationForest, Prophet(+seasonal-naive fallback, backtest MAE), KMeans+silhouette. Тести `test_analysis.py` (5) + реальний смоук (Київ) зелені. Коміт `5a8e311`. **R3 завершено.**
+
+### R4 — спершу мультиагент через claude CLI, далі ЗМІНА ОБСЯГУ
+- Реалізував `agents/{claude_cli,agents,judge,orchestrator}.py` (Оркестратор→Агенти→Суддя через `claude -p ... --output-format json`). Реальний прогін: llm_used=True, 5 агентів паралельно, після виправлень overall=1.0/verified, висновки українською. Коміт `170bf0d`. Тести `test_agents.py` (4) зелені.
+- **Запит користувача:** «Чому LLM для прогнозування, якщо є готові алгоритми? Зроби простий TSA-скрипт (pandas + графіки + алгоритмічний прогноз).»
+  - **Уточнення:** прогноз ніколи не робив LLM — він алгоритмічний (Prophet); LLM лише писав інтерпретації + суддя валідував.
+  - **Рішення користувача (AskUserQuestion):** «Повністю алгоритмічний, без LLM» — прибрати шар `claude` CLI зовсім.
+- **Виконано:** видалив пакет `src/airalerts/agents/` і `tests/test_agents.py`; додав детермінований `analysis/insights.py` (текстові авто-висновки з метрик, без LLM). Тести (8) зелені. **R4 переосмислено → авто-висновки без LLM.**
+  - Файли `Docs/orchestrator_research.md`, `Docs/judge_research.md` залишені як історичний запис дослідження (LLM-підхід), але в продукті не використовуються.
+  - Оновив `Global_Roadmap.md`, `Task4.md`, `Plan4.md` під нову модель (авто-висновки без LLM).
+
+### Запит користувача (2): розташування логу + push у GitHub
+- Користувач: «Не бачу, щоб ти зберігав лог-файл, як я просив, та не бачу push у GitHub».
+- **Дія:** перенесено `log.md` з `Plan_Folder/` у **корінь проєкту** (`/home/root1/kse/project1/log.md`), як просив користувач спочатку. Далі журнал ведеться в корені.
+- **Дія:** виконується `git push -u origin main` у `https://github.com/AZAR1VAN/kse-project-v1.git` (результат — нижче).

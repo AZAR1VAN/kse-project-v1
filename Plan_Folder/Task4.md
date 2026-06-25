@@ -1,15 +1,20 @@
-# Task 4 — Multi-agent (R4)
+# Task 4 — Авто-висновки (R4) *(переосмислено: без LLM)*
+
+> **Зміна обсягу (рішення замовника):** прибрати LLM-шар `claude` CLI зовсім. Прогноз/аналіз — повністю
+> алгоритмічні. Замість мультиагентного LLM-звіту — детерміновані текстові авто-висновки з метрик.
+> (Початкова реалізація Оркестратор→Агенти→Суддя видалена; дослідження в `Docs/` лишено як історію.)
 
 ## Опис
-Реалізувати мультиагентну систему **Оркестратор → Агенти → Суддя** через `claude` CLI (без API key). Ґрунт: `Docs/orchestrator_research.md`, `Docs/judge_research.md`.
+Детермінований модуль, що формує людино-читані висновки (українською) з уже порахованих метрик
+рівнів R3 — без жодних LLM-викликів.
 
 ## Обсяг
-- `agents/claude_cli.py`: `ask(prompt, *, schema=None, model=None, timeout=90)` — `subprocess.run(["claude","-p",prompt,"--output-format","json", ...])`; парс `result` (або `structured_output`); перевірка `is_error`; `ClaudeUnavailable` при таймауті/відсутності CLI.
-- `agents/agents.py`: спеціалізовані агенти TrendAgent, AnomalyAgent, ForecastAgent, PatternAgent, DescriptiveAgent — кожен бере метрики свого рівня (R3), формує промпт «інтерпретуй ці числа», повертає `{metrics, interpretation, source}`; при `ClaudeUnavailable` — детермінований шаблон.
-- `agents/judge.py`: для кожного агента звіряє твердження інтерпретації з реальними метриками (знак тренду, наявність дати-сплеску, узгодженість прогнозу), ставить confidence 0–1, позначає суперечності; детермінований fallback.
-- `agents/orchestrator.py`: `analyze(region, start, end, question=None)` — рахує метрики (R3), диспетчеризує агентів, передає Судді, повертає консолідований звіт.
+- `analysis/insights.py`: `report(df, region, start, end, horizon)` → `{kpi, conclusions[], series, n_days}`.
+- Висновки: KPI періоду, напрям тренду, аномальні дні, прогноз (Prophet/seasonal-naive), сезонність
+  (пікові години/дні), кластеризація регіонів (для «Уся Україна»).
+- Спільний фільтр подій `data/preprocess.filter_events(df, region, start, end)`.
 
 ## Критерії готовності
-- `orchestrator.analyze(...)` повертає звіт зі списком findings + confidence.
-- Якщо в інтерпретацію підкласти невірне число — суддя знижує confidence/позначає.
-- Працює і без `claude` CLI (fallback), і з ним.
+- `insights.report(...)` повертає несуперечливі висновки на реальному зрізі, **без мережі/LLM**.
+- Жодних залежностей від `claude` CLI у застосунку.
+- Тести аналітики (R3) лишаються зеленими.

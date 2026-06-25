@@ -16,7 +16,7 @@
 | R1 | Foundation | Каркас репо, залежності, git+origin, лог | `requirements.txt`, `.gitignore`, git repo | — |
 | R2 | Data layer | Завантаження+препроцес CSV → часові ряди | `src/airalerts/data/*` | data_agent |
 | R3 | Analysis core | Рівні 1–5 детермінованого аналізу | `src/airalerts/analysis/*` | trend/anomaly/forecast/pattern |
-| R4 | Multi-agent | Оркестратор/Агенти/Суддя через claude CLI | `src/airalerts/agents/*` | orchestrator/judge |
+| R4 | Авто-висновки (без LLM) | Детерміновані текстові висновки з метрик | `src/airalerts/analysis/insights.py` | *(LLM-шар прибрано за рішенням замовника — див. log.md)* |
 | R5 | Web UI | Streamlit multipage дашборд | `app/*` | — |
 | R6 | Test & verify | pytest + Playwright скріншоти | `tests/*`, скріншоти | — |
 | R7 | Docs & ship | README, фіналізація Plan_Folder, коміт+пуш | README, git push | — |
