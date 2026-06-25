@@ -1,0 +1,9 @@
+[project]
+name = "airalerts"
+version = "0.1.0"
+description = "Багаторівневий аналіз часових рядів повітряних тривог в Україні (Оркестратор → Агенти → Суддя)"
+requires-python = ">=3.11"
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]

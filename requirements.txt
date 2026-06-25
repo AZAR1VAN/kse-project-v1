@@ -1,0 +1,11 @@
+# Веб-застосунок аналізу повітряних тривог — залежності (усі НЕ-AGPL)
+streamlit>=1.36        # Apache-2.0 — UI
+plotly>=5.22           # MIT — графіки
+pandas>=2.2            # BSD-3 — дані
+numpy>=1.26            # BSD-3
+requests>=2.32         # Apache-2.0 — завантаження CSV
+statsmodels>=0.14      # BSD-3 — STL декомпозиція
+scikit-learn>=1.5      # BSD-3 — IsolationForest, KMeans
+prophet>=1.1           # MIT — прогноз
+ruptures>=1.1          # BSD-2 — change-points
+pytest>=8.0            # MIT — тести
