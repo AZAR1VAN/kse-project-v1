@@ -33,4 +33,12 @@
 - Створив структуру тек `Plan_Folder/`, `Plan_Folder/Docs/`, `src/airalerts/{data,analysis,agents}`, `app/pages`, `tests`.
 - Перевірив середовище: Python 3.12.3, uv, node v22.22.2, **claude CLI присутній**, git 2.43.0.
 - Створив цей `log.md`.
-- Наступне: спавн дослідницьких субагентів → запис досліджень у `Docs/` → синтез `Global_Roadmap.md` + `Task{N}.md`/`Plan{N}.md`.
+- Спавн 3 дослідницьких субагентів (через Claude Code) → записали 7 файлів у `Docs/`: data, trend, anomaly, forecast, pattern, orchestrator, judge.
+  - Підтверджено: дані ~101 969 рядків, 25 регіонів, колонки `region, started_at, finished_at, naive`; `claude -p ... --output-format json` (поле `result`), смоук-тест пройшов, timeout 90с.
+- Оркестратор синтезував `Global_Roadmap.md` + `Task{1..7}.md`/`Plan{1..7}.md` на основі Docs. **Phase 0 завершено.**
+
+### R1 — Foundation
+- Створив `requirements.txt` (усі не-AGPL), `pyproject.toml` (pytest pythonpath=src), `__init__.py`, `.gitignore`, `data_cache/.gitkeep`.
+- `uv venv` (py3.12) + встановлення залежностей; перевірено імпорти core + prophet — OK.
+- git: коміт R1 `8bfd8ef` (поверх наявного Initial commit), origin = kse-project-v1; гілка `main`.
+- Виключив `allskills/` з трекінгу (вкладені git-репо) + у `.gitignore`; лишилось 31 файл проєкту. **R1 завершено.**

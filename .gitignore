@@ -8,3 +8,4 @@ graphify-out/
 .streamlit/secrets.toml
 *.log
 .DS_Store
+allskills/
