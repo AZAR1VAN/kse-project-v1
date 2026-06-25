@@ -28,6 +28,10 @@ def _seasonal_naive(series: pd.Series, horizon: int, period: int = 7) -> pd.Data
 def _prophet_forecast(series: pd.Series, horizon: int) -> pd.DataFrame:
     from prophet import Prophet
 
+    # cmdstanpy/prophet ставлять власний рівень логування при імпорті — глушимо тут
+    for name in ("cmdstanpy", "prophet"):
+        logging.getLogger(name).setLevel(logging.CRITICAL)
+
     m = Prophet(weekly_seasonality=True, daily_seasonality=False, interval_width=0.80)
     m.fit(_to_prophet_df(series))
     future = m.make_future_dataframe(periods=horizon)
