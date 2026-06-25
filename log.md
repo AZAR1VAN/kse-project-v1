@@ -61,4 +61,5 @@
 ### Запит користувача (2): розташування логу + push у GitHub
 - Користувач: «Не бачу, щоб ти зберігав лог-файл, як я просив, та не бачу push у GitHub».
 - **Дія:** перенесено `log.md` з `Plan_Folder/` у **корінь проєкту** (`/home/root1/kse/project1/log.md`), як просив користувач спочатку. Далі журнал ведеться в корені.
-- **Дія:** виконується `git push -u origin main` у `https://github.com/AZAR1VAN/kse-project-v1.git` (результат — нижче).
+- **Дія:** спроба `git push -u origin main` у `https://github.com/AZAR1VAN/kse-project-v1.git`.
+- **РЕЗУЛЬТАТ: push заблоковано** — у середовищі немає GitHub-автентифікації (`could not read Username for 'https://github.com'`): немає `gh` CLI, немає `GH_TOKEN`/`GITHUB_TOKEN`, немає credential helper, SSH-ключ не авторизований. Локальні коміти готові на гілці `main` (`8bfd8ef`…`77f3016`). Потрібен токен/автентифікація від користувача для пушу.
